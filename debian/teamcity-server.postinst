@@ -10,7 +10,11 @@ case $1 in
         #DEBHELPER#
 
         chown $U /var/lib/teamcity
+        chown $U /var/lib/teamcity/BuildServer
+        chown $U /var/lib/teamcity/BuildServer/config
         chown $U /var/lib/teamcity/BuildServer/config/*.properties
+        chown $U /var/lib/teamcity/BuildServer/lib
+        chown $U /var/lib/teamcity/BuildServer/lib/jdbc
         chown $U /var/lib/teamcity/BuildServer/lib/jdbc/*.jar
 
         mysql -e "GRANT ALL PRIVILEGES ON 'teamcity'.* TO 'teamcity'@'localhost' IDENTIFIED BY 'teamcity'" 2>/dev/null || true
