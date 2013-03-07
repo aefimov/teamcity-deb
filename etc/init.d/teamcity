@@ -80,7 +80,7 @@ d_upgrade() {
 
             d_stop 2>/dev/null || true
 
-            unlink $TEAMCITY_SERVER_HOME
+            unlink $TEAMCITY_SERVER_HOME 2>/dev/null || true
             ln -s teamcity-$1 $TEAMCITY_SERVER_HOME
 
             d_start
