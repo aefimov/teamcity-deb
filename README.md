@@ -1,9 +1,15 @@
 ### Overview
-Debian Package for JetBrains TeamCity Server and Agent.
+Generator of custom Debian Package for JetBrains TeamCity Server and Agent.
 
-This package will install `mysql` as database on localhost and
-`nginx` as HTTPS frontend.
-Recommends `postfix` as mailer.
+Details of TeamCity Server configuration:
+- uses local MySql database (package installs `mysql` as database on localhost)
+- is accessible via HTTPS with signed certificates (package installs `nginx` as HTTPS frontend)
+- uses TeamCity Data Directory located at `/var/lib/teamcity/BuildServer`
+
+The package installs TeamCity server start and stop scripts into 
+`/etc/init.d` and also provides easy means to upgrade to newer TeamCity versions.
+
+`postfix` package is recommended to be used as a mail server to send out TeamCity email notifications.
 
 ### Step 1. Clone repo to your own copy
 ```
@@ -23,21 +29,21 @@ And push changes into it:
 git push -u origin master
 ```
 
-### Step 2. Creating SSL keys for Your TeamCity Server
-In root of Git repo:
+### Step 2. Create SSL keys for your TeamCity Server
+In the root of Git repo:
 ```
 mkdir ssl-certs
 cd ssl-certs
 openssl req -new -out request.csr
 ```
-Enter password you wish (anyone you like, but remember it), answer on questions
-`openssl` asks from you, depends on your Organization rules about issuing
+Enter password you wish (any you like, but remember it) and answer the questions
+`openssl` asks. These generally depend on your Organization rules about issuing
 certificates.
 ```
 cat request.csr
 ```
-Perform submit this request for certificate to issue certification system on
-your Organization (ask admin for this). In result you must have signed
+Submit this certificate request to issue certification system of
+your Organization (ask admin for this). In the result you should have signed
 `certnew.cer` file or something like this.
 Then convert private key into nginx key:
 ```
@@ -57,23 +63,23 @@ git add etc/nginx/ssl/teamcity.crt
 git commit -m "Update SSL certs"
 git push origin master
 ```
-You also can save `ssl-certs` directory in your Git repo, but this is not very
-secure:
+You also can save `ssl-certs` directory in your Git repo, but note that this is
+not secure:
 ```
 git add ssl-certs
 git commit -m "Add artifacts of SSL keys creation"
 git push origin master
 ```
 
-### Step 3. Creating SSH keys for `teamcity` user
-TeamCity Server and Agent runned under user `teamcity`. If you want to use SSH
-authorization to access into Version Control you need to generate SSH keys
-(private and public).
+### Step 3. Create SSH keys for `teamcity` user
+TeamCity Server and Agent run under user `teamcity`. If you want to use SSH
+authorization to access Version Control servers you need to generate SSH keys
+(private and public) for the user.
 
 ```
 ssh-keygen -t rsa -N "" -C teamcity -f ssh-keys/id_rsa
 ```
-It prompted for overwriting existing keys, you should agree.
+When it prompts for overwriting existing keys, you should agree.
 Don't forget to commit these new keys:
 ```
 git add ssh-keys/id_rsa*
@@ -83,12 +89,12 @@ git push origin master
 
 ### Step 4. Build package
 In Git repo root and on Ubuntu/Debian host:
-Update version (do not modify first version part, it used for downloading
-TeamCity from JetBrains site)
+Update version (do not modify the first part of the version, it isused for downloading
+TeamCity distribution from JetBrains site):
 ```
 dch -i
 ```
-Build
+Build:
 ```
 debuild
 ```
@@ -97,20 +103,20 @@ Upload to you local Debian distributives repo:
 debrelease
 ```
 #### Version of TeamCity and Version of Debian Package
-Version of TeamCity is first part of debian package version from `debian/changelog`
-first line. For example:
+Version of TeamCity is the first part of debian package version from the first line of
+`debian/changelog`. For example:
 ```
 teamcity (7.1.4.0) lucid; urgency=low
 ```
 Version of TeamCity – `7.1.4`
 Version of Debian Package – `7.1.4.0`
 
-On package build TeamCity version is directly put into `postinst` script and it
-will uprgade TeamCity automatically on package install. Script will download TeamCity
-for specified version from JetBrains Downloads site, and install it.
+During the package build TeamCity version is embedded into `postinst` script.
+On package install, the script will automatically download the specified 
+TeamCity version from JetBrains Downloads site, and install it.
 
 ### Setup TeamCity Server
-Put into ```/etc/apt/sources.list``` (if not exists):
+Add the folowing line into ```/etc/apt/sources.list``` if it is not yet present there:
 ```
 deb http://dist.acme.com/packages stable/all/
 ```
@@ -118,7 +124,7 @@ Then:
 ```
 sudo apt-get update && sudo apt-get install teamcity-server
 ```
-Package will create mysql database on localhost, connect TeamCity with it.
+Package will create mysql database on localhost and configure TeamCity to use it.
 
 #### TeamCity Server Startup and Shutdown
 Start:
@@ -135,7 +141,7 @@ sudo /etc/init.d/teamcity restart
 ```
 
 ### Setup TeamCity Agent
-Put into ```/etc/apt/sources.list``` (if not exists):
+Add the folowing line into ```/etc/apt/sources.list``` if it is not yet present there:
 ```
 deb http://dist.acme.com/packages stable/all/
 ```
@@ -143,12 +149,12 @@ Then:
 ```
 sudo apt-get update && sudo apt-get install teamcity-agent
 ```
-This install for you script `/etc/init.d/teamcity-agent`, run this one to
-install agent on host:
+This installs the script `/etc/init.d/teamcity-agent`.
+Run it to install agent on the host:
 ```
 sudo /etc/init.d/teamcity-agent install <agent.name.without.spaces> <server.url>
 ```
-This will download Agent from TeamCity server and install on this host. After
+This will download Agent from TeamCity server and install it on the current host. After
 this you can run it:
 ```
 sudo /etc/init.d/teamcity-agent start <agent.name.without.spaces>
@@ -181,37 +187,37 @@ sudo /etc/init.d/teamcity-agent restart <agent-name>
 ```
 sudo /etc/init.d/teamcity upgrade 7.1.4
 ```
-Where ```7.1.4```, is version published on JetBrains Site. This script will
+Where ```7.1.4```, is the version published on JetBrains Site. This script will
 download tar.gz, unpack it into `/usr/local/teamcity-7.1.4` and link to
 `/usr/local/teamcity`. Then TeamCity will be restarted.
 
-Version upgrading on first install will performed automatically.
+On the first install the upgrade will be performed automatically.
 
 ### Upgrade TeamCity Server. Good practice.
 Update package via:
 ```
 dch -i
 ```
-Change TeamCity version to new one.
+Change TeamCity version to the new one.
 ```
 git commit -a -m "Upgrade to TeamCity 7.1.4"
 git push origin master
 debuild
 debrelease
 ```
-Then just install new package on target hosts.
+Then just install the new package on target hosts.
 
 ### Database
 
-This package is used `mysql` as one of most popular on Ubuntu.
+This package uses `mysql` as one of the most popular on Ubuntu.
 
-Database `teamcity` created automatically on `localhost` for user `teamcity`, with
-password `teamcity` on first install. For security issues you can modify this
-package as you wish, and as your Organization is requires.
+Database `teamcity` is created automatically on `localhost` for user `teamcity`, with
+password `teamcity` on first install. For security reasons it is advised to modify 
+these settings in the package or otherwise to comply with your Organization rules.
 
-On first Run TeamCity will not use MySQL database, after first run and performing
-some initial setup if you see warning of 'External database', please just restart
-TeamCity server:
+On the very first start after initial TeamCity installation, it might not use 
+MySQL database. If you see a warning in TeamCity UI about 'External database',
+just restart TeamCity server:
 ```
 sudo /etc/init.d/teamcity restart
 ```
@@ -219,4 +225,4 @@ And then:
 ```
 tail -f /usr/local/teamcity/logs/teamcity-server.log
 ```
-When TeamCity prompt for token, copy&paste it from this log and continue.
+When TeamCity prompts for an authentication token, copy&paste it from this log and continue.
