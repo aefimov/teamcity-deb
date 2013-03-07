@@ -1,0 +1,26 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+clean:
+	dh_testdir
+	dh_clean
+build:
+	dh_testdir
+install:
+	dh_testdir
+	dh_clean -k
+	dh_installdirs
+	debian/install
+binary: install
+	dh_installchangelogs
+	dh_installdocs
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_installdeb
+	debian/version
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+

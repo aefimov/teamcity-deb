@@ -1,0 +1,16 @@
+#!/bin/sh -e
+# prerm script for teamcity-server
+set -e
+
+test "$1" = "upgrade" && exit 0
+
+#DEBHELPER#
+
+/etc/init.d/teamcity stop 2>/dev/null || true
+
+unlink /etc/nginx/sites-enabled/teamcity 2>/dev/null || true
+unlink /etc/nginx/sites-enabled/teamcity-ssl 2>/dev/null || true
+if [ -f /etc/nginx/nginx-default.conf ]; then
+    nginx -tc /etc/nginx/nginx-default.conf 2>/dev/null || true
+fi
+exit 0

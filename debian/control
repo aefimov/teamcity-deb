@@ -1,0 +1,24 @@
+Source: teamcity
+Section: misc
+Priority: extra
+Build-Depends: debhelper (>= 7)
+Maintainer: Alexey Efimov <aefimov-box@ya.ru>
+Standards-Version: 3.8.3
+
+Package: teamcity-common
+Architecture: all
+Homepage: https://github.com/aefimov/teamcity-deb
+Description: Create teamcity user and put SSH keys/config to him
+
+Package: teamcity-agent
+Depends: teamcity-common (>= @PKG_VERSION@)
+Architecture: all
+Homepage: https://github.com/aefimov/teamcity-deb
+Description: Create teamcity-agent init.d script and directories for installing TeamCity agents
+
+Package: teamcity-server
+Recommends: default-jre, postfix
+Depends: nginx, haproxy, mysql-server, git, teamcity-common (>= @PKG_VERSION@)
+Architecture: all
+Homepage: https://github.com/aefimov/teamcity-deb
+Description: Install TeamCity server

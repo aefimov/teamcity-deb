@@ -1,0 +1,109 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          teamcity-agent
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: initscript for teamcity-agent
+# Description:       initscript for teamcity-agent
+### END INIT INFO
+
+# Author: Alexey Efimov <aefimov-box@ya.ru>
+
+set -e
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+AGENTS_ROOT="/usr/local/teamcity-agents"
+DATA_ROOT="/var/lib/teamcity/BuildAgents"
+TEAMCITY_AGENT_NAME="$2"
+TEAMCITY_AGENT_HOME="$AGENTS_ROOT/$TEAMCITY_AGENT_NAME"
+
+d_start() {
+    su - teamcity -c "(. ~/.teamcityrc; cd $TEAMCITY_AGENT_HOME; $TEAMCITY_AGENT_HOME/bin/agent.sh start)"
+}
+
+d_stop() {
+    su - teamcity -c "(. ~/.teamcityrc; cd $TEAMCITY_AGENT_HOME; $TEAMCITY_AGENT_HOME/bin/agent.sh stop $@)"
+}
+
+d_install() {
+    NAME=$1
+    SERVER_URL=$2
+    if [ -z "$NAME" -o -z "$SERVER_URL" ]; then
+        echo "Usage /etc/init.d/teamcity-agent install <teamcity-agent-name> <teamcity.server.url>"
+        exit 1;
+    else
+        echo Downloading TeamCity Agent from $SERVER_URL...
+        BUILD_AGENT_ZIP="buildAgent.zip"
+        wget -O $AGENTS_ROOT/$BUILD_AGENT_ZIP $SERVER_URL/update/$BUILD_AGENT_ZIP
+        unzip $AGENTS_ROOT/$BUILD_AGENT_ZIP -d $AGENTS_ROOT/$NAME
+        chmod +x $AGENTS_ROOT/$NAME/bin/agent.sh
+        WORK_DIR="$DATA_ROOT/$NAME/work"
+        TEMP_DIR="$DATA_ROOT/$NAME/temp"
+        SYSTEM_DIR="$DATA_ROOT/$NAME/system"
+        OWN_PORT="9090"
+        MAX_EXISTS_PORT=$(cat $AGENTS_ROOT/*/conf/buildAgent.properties 2>/dev/null | grep ownPort | cut -d= -f2 | sort -r | head -1)
+        if [ ! -z "$MAX_EXISTS_PORT" ]; then
+            OWN_PORT=$(expr $MAX_EXISTS_PORT + 1)
+        fi
+
+        cat $AGENTS_ROOT/$NAME/conf/buildAgent.dist.properties \
+            | sed "s,^serverUrl=.*$,serverUrl=$SERVER_URL,g" \
+            | sed "s,^name=.*$,name=$NAME,g" \
+            | sed "s,^workDir=.*$,workDir=$WORK_DIR,g" \
+            | sed "s,^tempDir=.*$,tempDir=$TEMP_DIR,g" \
+            | sed "s,^systemDir=.*$,systemDir=$SYSTEM_DIR,g" \
+            | sed "s,^ownPort=.*$,ownPort=$OWN_PORT,g" \
+        > $AGENTS_ROOT/$NAME/conf/buildAgent.properties
+        chown -R teamcity $AGENTS_ROOT/$NAME
+        echo "Agent installed to $AGENTS_ROOT/$NAME with follow options:"
+        cat $AGENTS_ROOT/$NAME/conf/buildAgent.properties | egrep -v "^#" | egrep -v "^[[:space:]]*$"
+        echo "To start/stop/restart agent use:"
+        echo "sudo /etc/init.d/teamcity-agent (start|stop|kill|restart) $NAME"
+    fi
+}
+
+if [ ! -z "$TEAMCITY_AGENT_NAME" ]; then
+    case "$1" in
+      start)
+        echo "Starting TeamCity Agent '$TEAMCITY_AGENT_NAME' in $TEAMCITY_AGENT_HOME..."
+        d_start
+        ;;
+      stop)
+        echo "Stopping TeamCity Agent '$TEAMCITY_AGENT_NAME' in $TEAMCITY_AGENT_HOME..."
+        d_stop
+        ;;
+      kill)
+        echo "Killing TeamCity Agent '$TEAMCITY_AGENT_NAME' in $TEAMCITY_AGENT_HOME..."
+        d_stop 'kill'
+        ;;
+      restart|force-reload)
+        echo "Restarting TeamCity Agent '$TEAMCITY_AGENT_NAME' in $TEAMCITY_AGENT_HOME..."
+        d_stop
+        sleep 10
+        d_start
+        ;;
+      install)
+        shift
+        echo "Installing new agent $1 connected to $2"
+        d_install $1 $2
+        ;;
+      *)
+        echo "Usage: /etc/init.d/teamcity-agent {start|stop|kill|restart|install} <teamcity-agent-name> [<teamcity.server.url>]" >&2
+        exit 1
+        ;;
+    esac
+else
+    echo "Usage: /etc/init.d/teamcity-agent {start|stop|kill|restart|install} <teamcity-agent-name> [<teamcity.server.url>]" >&2
+    INSTALLED=$(find $AGENTS_ROOT -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | sort)
+    if [ ! -z "$INSTALLED" ]; then
+        echo "Posible Teamcity Agents installed into $AGENTS_ROOT are:"
+        echo $INSTALLED
+    else
+        echo "You have no agents installed into $AGENTS_ROOT"
+    fi
+    exit 1
+fi
+
+exit 0

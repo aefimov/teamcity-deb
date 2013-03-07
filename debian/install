@@ -1,0 +1,37 @@
+#!/bin/sh
+
+C="debian/teamcity-common"
+A="debian/teamcity-agent"
+S="debian/teamcity-server"
+
+inst() {
+    dir="$1/$(dirname $3)"
+    install -d $dir
+    install $2 $3 $dir
+}
+
+# Server
+inst $S -m755 etc/init.d/teamcity
+inst $S -m644 etc/cron.d/teamcity
+inst $S -m644 etc/nginx/sites-available/teamcity
+inst $S -m644 etc/nginx/sites-available/teamcity-ssl
+inst $S -m644 etc/nginx/ssl/teamcity.crt
+inst $S -m644 etc/nginx/ssl/teamcity.key
+
+inst $S -m644 var/lib/teamcity/BuildServer/config/database.properties
+inst $S -m644 var/lib/teamcity/BuildServer/config/internal.properties
+inst $S -m644 var/lib/teamcity/BuildServer/lib/jdbc/mysql-connector-java-5.1.16.jar
+
+# Agent
+inst $A -m755 etc/init.d/teamcity-agent
+install -d $A/usr/local/teamcity-agents
+install -d $A/var/lib/teamcity/BuildAgents
+
+# Common
+inst $C -m644 home/teamcity/.gitconfig
+inst $C -m644 home/teamcity/.teamcityrc
+inst $C -m644 home/teamcity/.ssh/config
+# SSH keys
+install -m600 ssh-keys/id_rsa $C/home/teamcity/.ssh/id_rsa
+install -m600 ssh-keys/id_rsa.pub $C/home/teamcity/.ssh/id_rsa.pub
+

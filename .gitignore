@@ -1,0 +1,5 @@
+debian/files
+debian/teamcity-*.debhelper.log
+debian/teamcity-*.substvars
+debian/teamcity-*/
+.idea/

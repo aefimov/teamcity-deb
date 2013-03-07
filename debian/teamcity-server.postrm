@@ -1,0 +1,11 @@
+#!/bin/sh -e
+# prerm script for teamcity-server
+set -e
+
+test "$1" = "upgrade" && exit 0
+
+#DEBHELPER#
+
+update-rc.d teamcity remove 2>/dev/null || true
+
+exit 0

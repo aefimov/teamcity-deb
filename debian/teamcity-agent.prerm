@@ -1,0 +1,11 @@
+#!/bin/sh -e
+# prerm script for teamcity-agent
+set -e
+
+test "$1" = "upgrade" && exit 0
+
+#DEBHELPER#
+
+/etc/init.d/teamcity-agent kill all 2>/dev/null || true
+
+exit 0

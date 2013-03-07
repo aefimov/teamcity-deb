@@ -1,0 +1,30 @@
+#!/bin/sh -e
+# postinst script for teamcity-agent
+set -e
+
+U="teamcity"
+
+case $1 in
+    configure)
+
+        #DEBHELPER#
+
+        chown $U /var/lib/teamcity
+        chown $U /var/lib/teamcity/BuildAgents
+        chown $U /usr/local/teamcity-agents
+
+        echo "Please install agent by 'sudo /etc/init.d/teamcity-agent install <name> <server.url>'"
+
+        update-rc.d teamcity-agent defaults 2>/dev/null || true
+        ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+        ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        ;;
+
+esac
+
+exit 0

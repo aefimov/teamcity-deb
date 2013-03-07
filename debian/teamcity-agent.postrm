@@ -1,0 +1,11 @@
+#!/bin/sh -e
+# prerm script for teamcity-agent
+set -e
+
+test "$1" = "upgrade" && exit 0
+
+#DEBHELPER#
+
+update-rc.d teamcity-agent remove 2>/dev/null || true
+
+exit 0

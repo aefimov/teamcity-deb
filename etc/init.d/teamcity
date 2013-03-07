@@ -1,0 +1,118 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          teamcity
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: initscript for teamcity
+# Description:       initscript for teamcity
+### END INIT INFO
+
+# Author: Alexey Efimov <aefimov-box@ya.ru>
+
+set -e
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+TEAMCITY_SERVER_HOME="/usr/local/teamcity"
+
+catalina_pids() {
+    ps ax | grep 'org.apache.catalina.startup.Bootstrap' | grep -v grep | awk '{print $1}'
+}
+
+git_pids() {
+    ps ax | grep 'jetbrains.buildServer.buildTriggers.vcs.git.Fetcher' | grep -v grep | awk '{print $1}'
+}
+
+kill_safety() {
+    PID=$1
+    echo -n "Killing $2 with pid $PID"
+    if [ ! -z "$1" ]; then
+        if [ $(ps ax | grep $PID | grep -v grep | wc -l) -ne 0 ]; then
+            kill $PID
+        fi
+        if [ $(ps ax | grep $PID | grep -v grep | wc -l) -ne 0 ]; then
+            WAIT_TIME=0
+            while [ $(ps ax | grep $PID | grep -v grep | wc -l) -ne 0 -a "$WAIT_TIME" -lt 15 ]
+            do
+                echo -n "."
+                sleep 1
+                WAIT_TIME=$(expr $WAIT_TIME + 1)
+            done
+            echo
+        fi
+        if [ $(ps ax | grep $PID | grep -v grep | wc -l) -ne 0 ]; then
+            echo -n "(kill -9 hang process)"
+            kill -9 $PID
+        fi
+    fi
+    echo "."
+}
+
+kill_all_safety() {
+    while [ ! -z "$(catalina_pids | head -1)" ]; do
+        kill_safety "$(catalina_pids | head -1)" "TeamCity Server"
+    done
+    while [ ! -z "$(git_pids | head -1)" ]; do
+        kill_safety "$(git_pids | head -1)" "TeamCity Git Fetcher"
+    done
+}
+
+d_start() {
+    su - teamcity -c "(. ~/.teamcityrc; cd $TEAMCITY_SERVER_HOME; $TEAMCITY_SERVER_HOME/bin/teamcity-server.sh start)"
+}
+
+d_stop() {
+    su - teamcity -c "(. ~/.teamcityrc; cd $TEAMCITY_SERVER_HOME; $TEAMCITY_SERVER_HOME/bin/teamcity-server.sh stop)"
+    kill_all_safety
+}
+
+d_upgrade() {
+    TEAMCITY_TAR_GZ="/usr/local/TeamCity-$1.tar.gz"
+    if [ ! -d $TEAMCITY_SERVER_HOME-$1 ]; then
+        echo Downloading TeamCity from JetBrains site...
+        wget -c -N -O $TEAMCITY_TAR_GZ http://download-ln.jetbrains.com/teamcity/TeamCity-$1.tar.gz
+
+        if [ -f $TEAMCITY_TAR_GZ ]; then
+            tar zxf $TEAMCITY_TAR_GZ -C /usr/local
+            mv /usr/local/TeamCity $TEAMCITY_SERVER_HOME-$1
+            chown -R teamcity $TEAMCITY_SERVER_HOME-$1
+
+            d_stop 2>/dev/null || true
+
+            unlink $TEAMCITY_SERVER_HOME
+            ln -s teamcity-$1 $TEAMCITY_SERVER_HOME
+
+            d_start
+        fi
+    else
+        echo "TeamCity version $1 already installed"
+    fi
+}
+
+case "$1" in
+  start)
+    echo "Starting TeamCity Server..."
+    d_start
+    ;;
+  stop)
+    echo "Stopping TeamCity Server..."
+    d_stop
+    ;;
+  restart|force-reload)
+    echo "Restarting TeamCity Server..."
+    d_stop
+    sleep 2s
+    d_start
+    ;;
+  upgrade)
+    echo "Upgrading TeamCity Server in $TEAMCITY_SERVER_HOME to version $2..."
+    d_upgrade $2
+    ;;
+  *)
+    echo "Usage: /etc/init.d/teamcity {start|stop|restart|upgrade <version>}" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

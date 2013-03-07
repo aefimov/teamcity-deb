@@ -1,0 +1,32 @@
+#!/bin/sh
+# postinst script for teamcity-common
+
+U="teamcity"
+
+case $1 in
+    configure)
+
+        #DEBHELPER#
+
+        if [ -z "$(id $U 2>/dev/null)" ]; then
+            echo Creating user $U...
+            adduser --home /home/$U --shell /bin/sh $U
+        fi
+
+        chmod 700 /home/$U/.ssh
+        chmod 600 /home/$U/.ssh/id_rsa
+        chmod 600 /home/$U/.ssh/id_rsa.pub
+
+        chown -R $U:users /home/$U
+        ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+        ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        ;;
+
+esac
+
+exit 0
