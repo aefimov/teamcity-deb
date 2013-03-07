@@ -36,7 +36,7 @@ d_install() {
     else
         echo Downloading TeamCity Agent from $SERVER_URL...
         BUILD_AGENT_ZIP="buildAgent.zip"
-        wget -O $AGENTS_ROOT/$BUILD_AGENT_ZIP $SERVER_URL/update/$BUILD_AGENT_ZIP
+        wget --no-check-certificate -O $AGENTS_ROOT/$BUILD_AGENT_ZIP $SERVER_URL/update/$BUILD_AGENT_ZIP
         unzip $AGENTS_ROOT/$BUILD_AGENT_ZIP -d $AGENTS_ROOT/$NAME
         chmod +x $AGENTS_ROOT/$NAME/bin/agent.sh
         WORK_DIR="$DATA_ROOT/$NAME/work"
