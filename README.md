@@ -207,4 +207,16 @@ This package is used `mysql` as one of most popular on Ubuntu.
 
 Database `teamcity` created automatically on `localhost` for user `teamcity`, with
 password `teamcity` on first install. For security issues you can modify this
-package as you wish, and as your Organization is requires. Just for this repo.
+package as you wish, and as your Organization is requires.
+
+On first Run TeamCity will not use MySQL database, after first run and performing
+some initial setup if you see warning of 'External database', please just restart
+TeamCity server:
+```
+sudo /etc/init.d/teamcity restart
+```
+And then:
+```
+tail -f /usr/local/teamcity/logs/teamcity-server.log
+```
+When TeamCity prompt for token, copy&paste it from this log and continue.
