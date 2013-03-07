@@ -16,55 +16,12 @@ set -e
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 TEAMCITY_SERVER_HOME="/usr/local/teamcity"
 
-catalina_pids() {
-    ps ax | grep 'org.apache.catalina.startup.Bootstrap' | grep -v grep | awk '{print $1}'
-}
-
-git_pids() {
-    ps ax | grep 'jetbrains.buildServer.buildTriggers.vcs.git.Fetcher' | grep -v grep | awk '{print $1}'
-}
-
-kill_safety() {
-    PID=$1
-    echo -n "Killing $2 with pid $PID"
-    if [ ! -z "$1" ]; then
-        if [ $(ps ax | grep $PID | grep -v grep | wc -l) -ne 0 ]; then
-            kill $PID
-        fi
-        if [ $(ps ax | grep $PID | grep -v grep | wc -l) -ne 0 ]; then
-            WAIT_TIME=0
-            while [ $(ps ax | grep $PID | grep -v grep | wc -l) -ne 0 -a "$WAIT_TIME" -lt 15 ]
-            do
-                echo -n "."
-                sleep 1
-                WAIT_TIME=$(expr $WAIT_TIME + 1)
-            done
-            echo
-        fi
-        if [ $(ps ax | grep $PID | grep -v grep | wc -l) -ne 0 ]; then
-            echo -n "(kill -9 hang process)"
-            kill -9 $PID
-        fi
-    fi
-    echo "."
-}
-
-kill_all_safety() {
-    while [ ! -z "$(catalina_pids | head -1)" ]; do
-        kill_safety "$(catalina_pids | head -1)" "TeamCity Server"
-    done
-    while [ ! -z "$(git_pids | head -1)" ]; do
-        kill_safety "$(git_pids | head -1)" "TeamCity Git Fetcher"
-    done
-}
-
 d_start() {
     su - teamcity -c "(. ~/.teamcityrc; cd $TEAMCITY_SERVER_HOME; $TEAMCITY_SERVER_HOME/bin/teamcity-server.sh start)"
 }
 
 d_stop() {
     su - teamcity -c "(. ~/.teamcityrc; cd $TEAMCITY_SERVER_HOME; $TEAMCITY_SERVER_HOME/bin/teamcity-server.sh stop)"
-    kill_all_safety
 }
 
 d_upgrade() {
