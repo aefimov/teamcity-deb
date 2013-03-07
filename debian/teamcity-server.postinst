@@ -17,7 +17,7 @@ case $1 in
         chown $U /var/lib/teamcity/BuildServer/lib/jdbc
         chown $U /var/lib/teamcity/BuildServer/lib/jdbc/*.jar
 
-        mysql -e "GRANT ALL PRIVILEGES ON 'teamcity'.* TO 'teamcity'@'localhost' IDENTIFIED BY 'teamcity'" 2>/dev/null || true
+        mysql -e "GRANT ALL PRIVILEGES ON teamcity.* TO 'teamcity'@'localhost' IDENTIFIED BY 'teamcity'" 2>/dev/null || true
         mysql -uteamcity -pteamcity -e "CREATE DATABASE teamcity DEFAULT CHARSET utf8" 2>/dev/null || true
 
         /etc/init.d/teamcity upgrade @TEAMCITY_VERSION@
