@@ -9,7 +9,7 @@ Package: teamcity-common
 Recommends: default-jre, git, subversion, mercurial
 Architecture: all
 Homepage: https://github.com/aefimov/teamcity-deb
-Description: Create teamcity user and put SSH keys/config to him
+Description: Create teamcity user and configure SSH keys/config for him
 
 Package: teamcity-agent
 Depends: teamcity-common (= ${binary:Version})
