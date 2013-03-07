@@ -2,5 +2,4 @@
 
 P="debian/teamcity"
 
-sed -i "s,@PKG_VERSION@,$(head -1 debian/changelog | egrep -o '[0-9]+.[0-9]+.[0-9]+[^\)]+')," $P-*/DEBIAN/*
 sed -i "s,@TEAMCITY_VERSION@,$(head -1 debian/changelog | egrep -o '[0-9]+.[0-9]+.[0-9]+')," $P-*/DEBIAN/*
