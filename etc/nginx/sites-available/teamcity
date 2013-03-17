@@ -6,14 +6,14 @@ server {
     client_max_body_size   1g;
     send_timeout           10m;
 
-    location ~* ^/RPC|^/repository/download {
+    location ~* ^/login {
+        return 302 https://$hostname$request_uri;
+    }
+
+    location / {
         proxy_pass http://127.0.0.1:8111;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_read_timeout  900;
-    }
-
-    location / {
-        return 302 https://$hostname$request_uri;
     }
 }
