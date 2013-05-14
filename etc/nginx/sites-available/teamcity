@@ -1,5 +1,5 @@
 server {
-    listen 80;
+    listen [::]:80;
 
     client_header_timeout  10m;
     client_body_timeout    10m;
