@@ -1,3 +1,9 @@
+teamcity (8.0.1.0) lucid; urgency=low
+
+  * Upgrade to version 8.0.1
+
+ -- Alexey Efimov <aefimov-box@ya.ru>  Mon, 01 Jul 2013 13:36:37 +0400
+
 teamcity (8.0.0.0) lucid; urgency=low
 
   * Upgrade to version 8.0
