@@ -28,7 +28,7 @@ d_upgrade() {
     TEAMCITY_TAR_GZ="/usr/local/TeamCity-$1.tar.gz"
     if [ ! -d $TEAMCITY_SERVER_HOME-$1 ]; then
         echo Downloading TeamCity from JetBrains site...
-        wget -c -N -O $TEAMCITY_TAR_GZ http://download-ln.jetbrains.com/teamcity/TeamCity-$1.tar.gz
+        wget -c -N -O $TEAMCITY_TAR_GZ http://download.jetbrains.com/teamcity/TeamCity-$1.tar.gz
 
         if [ -f $TEAMCITY_TAR_GZ ]; then
             tar zxf $TEAMCITY_TAR_GZ -C /usr/local
