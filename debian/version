@@ -1,5 +1,5 @@
 #!/bin/sh
 
 P="debian/teamcity"
-V=$(head -1 debian/changelog | egrep -o '[0-9]+.[0-9]+.[0-9]+' | sed s,\.0\.0$,.0,)
+V=$(head -1 debian/changelog | egrep -o '[0-9]+.[0-9]+.[0-9]+' | sed s,\.0$,,)
 sed -i "s,@TEAMCITY_VERSION@,$V," $P-*/DEBIAN/*
