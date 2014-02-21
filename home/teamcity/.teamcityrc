@@ -8,7 +8,7 @@ TEAMCITY_OPTS="-Dsun.security.ssl.allowUnsafeRenegotiation=true -Dfile.encoding=
 
 export TEAMCITY_DATA_PATH="/var/lib/teamcity/BuildServer"
 export TEAMCITY_SERVER_MEM_OPTS="-Xms1024m -Xmx2048m -XX:MaxPermSize=512m"
-export TEAMCITY_SERVER_OPTS="$TEAMCITY_OPTS"
+export TEAMCITY_SERVER_OPTS="$TEAMCITY_OPTS -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
 
 export TEAMCITY_AGENT_MEM_OPTS="-Xms128m -Xmx1024m"
 export TEAMCITY_AGENT_OPTS="$TEAMCITY_OPTS"
