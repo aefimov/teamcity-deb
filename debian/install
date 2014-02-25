@@ -20,7 +20,7 @@ inst $S -m644 etc/nginx/ssl/teamcity.key
 
 inst $S -m644 var/lib/teamcity/BuildServer/config/database.properties
 inst $S -m644 var/lib/teamcity/BuildServer/config/internal.properties
-inst $S -m644 var/lib/teamcity/BuildServer/lib/jdbc/mysql-connector-java-5.1.24-bin.jar
+inst $S -m644 var/lib/teamcity/BuildServer/lib/jdbc/mysql-connector-java-5.1.29-bin.jar
 
 # Agent
 inst $A -m755 etc/init.d/teamcity-agent
