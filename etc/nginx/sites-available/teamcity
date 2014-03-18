@@ -3,7 +3,7 @@ server {
 
     client_header_timeout  10m;
     client_body_timeout    10m;
-    client_max_body_size   1g;
+    client_max_body_size   10g;
     send_timeout           10m;
 
     location ~* ^/login {
