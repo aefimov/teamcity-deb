@@ -15,5 +15,6 @@ server {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_read_timeout  900;
+        proxy_max_temp_file_size 10240m;
     }
 }
