@@ -7,7 +7,7 @@ server {
     send_timeout           10m;
 
     location ~* ^/login {
-        return 302 https://$hostname$request_uri;
+        return 302 https://$host$request_uri;
     }
 
     location / {
