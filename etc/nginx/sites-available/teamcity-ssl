@@ -8,16 +8,5 @@ server {
     ssl_protocols TLSv1 SSLv3;
     ssl_ciphers !aNULL:!LOW:!MD5:!EXP:RC4:CAMELLIA:AES128:3DES:SEED:AES256;
 
-    client_header_timeout  10m;
-    client_body_timeout    10m;
-    client_max_body_size   0;
-    send_timeout           10m;
-
-    location / {
-        proxy_pass http://127.0.0.1:8111;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_read_timeout  900;
-        proxy_max_temp_file_size 10240m;
-    }
+    include teamcity/main.conf;
 }
