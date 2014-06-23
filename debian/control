@@ -19,7 +19,13 @@ Description: Create teamcity-agent init.d script and directories for installing 
 
 Package: teamcity-server
 Recommends: postfix
-Depends: nginx, mysql-server, teamcity-common (= ${binary:Version})
+Depends: nginx, teamcity-common (= ${binary:Version})
 Architecture: all
 Homepage: https://github.com/aefimov/teamcity-deb
 Description: Install TeamCity server
+
+Package: teamcity-server-localhost-mysql
+Depends: mysql-server, teamcity-server (= ${binary:Version})
+Architecture: all
+Homepage: https://github.com/aefimov/teamcity-deb
+Description: Install TeamCity server with mysql database on localhost

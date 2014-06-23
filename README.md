@@ -2,7 +2,6 @@
 Generator of custom Debian Package for JetBrains TeamCity Server and Agent.
 
 Details of TeamCity Server configuration:
-- uses local MySql database (package installs `mysql` as database on localhost)
 - is accessible via HTTPS with signed certificates (package installs `nginx` as HTTPS frontend)
 - uses TeamCity Data Directory located at `/var/lib/teamcity/BuildServer`
 
@@ -124,6 +123,10 @@ Then:
 ```
 sudo apt-get update && sudo apt-get install teamcity-server
 ```
+If you like to use mysql as localhost database:
+```
+sudo apt-get update && sudo apt-get install teamcity-server-localhost-mysql
+```
 Package will create mysql database on localhost and configure TeamCity to use it.
 
 #### TeamCity Server Startup and Shutdown
@@ -209,6 +212,7 @@ Then just install the new package on target hosts.
 
 ### Database
 
+You need to use `teamcity-server-localhost-mysql` package.
 This package uses `mysql` as one of the most popular on Ubuntu.
 
 Database `teamcity` is created automatically on `localhost` for user `teamcity`, with

@@ -3,6 +3,7 @@
 C="debian/teamcity-common"
 A="debian/teamcity-agent"
 S="debian/teamcity-server"
+M="debian/teamcity-server-localhost-mysql"
 
 inst() {
     dir="$1/$(dirname $3)"
@@ -21,10 +22,11 @@ inst $S -m644 etc/nginx/teamcity/proxy-cache.conf
 inst $S -m644 etc/nginx/teamcity/proxy-common.conf
 inst $S -m644 etc/nginx/ssl/teamcity.crt
 inst $S -m644 etc/nginx/ssl/teamcity.key
-
-inst $S -m644 var/lib/teamcity/BuildServer/config/database.properties
 inst $S -m644 var/lib/teamcity/BuildServer/config/internal.properties
-inst $S -m644 var/lib/teamcity/BuildServer/lib/jdbc/mysql-connector-java-5.1.29-bin.jar
+
+# Server with mysql
+inst $M -m644 var/lib/teamcity/BuildServer/config/database.properties
+inst $M -m644 var/lib/teamcity/BuildServer/lib/jdbc/mysql-connector-java-5.1.29-bin.jar
 
 # Agent
 inst $A -m755 etc/init.d/teamcity-agent
