@@ -16,7 +16,7 @@ inst $S -m755 etc/init.d/teamcity
 inst $S -m644 etc/cron.d/teamcity
 inst $S -m644 etc/nginx/sites-available/teamcity
 inst $S -m644 etc/nginx/sites-available/teamcity-ssl
-inst $S -m644 etc/nginx/conf.d/teamcity-artifacts-cache.conf
+inst $S -m644 etc/nginx/teamcity/teamcity-artifacts-cache.conf
 inst $S -m644 etc/nginx/teamcity/main.conf
 inst $S -m644 etc/nginx/teamcity/proxy-cache.conf
 inst $S -m644 etc/nginx/teamcity/proxy-common.conf
