@@ -1,3 +1,5 @@
+include teamcity/teamcity-artifacts-cache.conf;
+
 server {
     listen [::]:80;
 
