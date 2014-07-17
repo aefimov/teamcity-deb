@@ -13,7 +13,6 @@ inst() {
 
 # Server
 inst $S -m755 etc/init.d/teamcity
-inst $S -m644 etc/cron.d/teamcity
 inst $S -m644 etc/nginx/sites-available/teamcity
 inst $S -m644 etc/nginx/sites-available/teamcity-ssl
 inst $S -m644 etc/nginx/teamcity/teamcity-artifacts-cache.conf

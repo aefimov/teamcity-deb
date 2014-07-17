@@ -1,1 +1,0 @@
-40 8 * * * root /etc/init.d/teamcity restart > /dev/null 2>&1
