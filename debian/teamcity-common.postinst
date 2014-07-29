@@ -17,7 +17,12 @@ case $1 in
         chmod 600 /home/$U/.ssh/id_rsa
         chmod 600 /home/$U/.ssh/id_rsa.pub
 
-        chown -R $U:users /home/$U
+        chown $U /home/$U
+        chown $U /home/$U/.ssh
+        chown $U /home/$U/.ssh/id_rsa
+        chown $U /home/$U/.ssh/id_rsa.pub
+        chown $U /home/$U/.gitconfig
+        chown $U /home/$U/.teamcityrc
         ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
