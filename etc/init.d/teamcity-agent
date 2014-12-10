@@ -1,8 +1,10 @@
 #! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          teamcity-agent
-# Required-Start:    $local_fs $network $remote_fs
-# Required-Stop:     $local_fs $remote_fs
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Should-Start:      $named $syslog $time
+# Should-Stop:       $named $syslog $time
 # Default-Start:     2 3 4 5
 # Default-Stop:      S 0 1 6
 # Short-Description: initscript for teamcity-agent
