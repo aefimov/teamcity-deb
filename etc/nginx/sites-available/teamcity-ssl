@@ -1,4 +1,5 @@
 server {
+    listen 443 ssl;
     listen [::]:443 ssl;
 
     ssl on;

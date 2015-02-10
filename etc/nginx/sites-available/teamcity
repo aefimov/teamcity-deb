@@ -1,6 +1,7 @@
 include teamcity/teamcity-artifacts-cache.conf;
 
 server {
+    listen 80;
     listen [::]:80;
 
     location ~* ^/login {

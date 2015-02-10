@@ -19,7 +19,7 @@ Description: Create teamcity-agent init.d script and directories for installing 
 
 Package: teamcity-server
 Recommends: postfix
-Depends: nginx, teamcity-common (= ${binary:Version})
+Depends: nginx (>= 1.6), teamcity-common (= ${binary:Version})
 Architecture: all
 Homepage: https://github.com/aefimov/teamcity-deb
 Description: Install TeamCity server
