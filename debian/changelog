@@ -1,3 +1,9 @@
+teamcity (9.0.3.0) lucid; urgency=low
+
+  * Upgrade to TeamCity 9.0.3
+
+ -- Alexey Efimov <aefimov-box@ya.ru>  Mon, 16 Mar 2015 17:59:12 +0400
+
 teamcity (9.0.2.0) lucid; urgency=low
 
   * Upgrade to TeamCity 9.0.2
