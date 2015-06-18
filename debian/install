@@ -19,6 +19,7 @@ inst $S -m644 etc/nginx/teamcity/teamcity-artifacts-cache.conf
 inst $S -m644 etc/nginx/teamcity/main.conf
 inst $S -m644 etc/nginx/teamcity/proxy-cache.conf
 inst $S -m644 etc/nginx/teamcity/proxy-common.conf
+inst $S -m644 etc/nginx/teamcity/web-sockets.conf
 inst $S -m644 etc/nginx/ssl/teamcity.crt
 inst $S -m644 etc/nginx/ssl/teamcity.key
 inst $S -m644 var/lib/teamcity/BuildServer/config/internal.properties
