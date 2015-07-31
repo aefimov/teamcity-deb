@@ -1,3 +1,9 @@
+teamcity (9.1.0) unstable; urgency=medium
+
+  * Upgrade to TeamCity 9.1
+
+ -- Alexey Efimov <aefimov-box@ya.ru>  Fri, 31 Jul 2015 15:02:18 +0300
+
 teamcity (9.0.5.0) UNRELEASED; urgency=medium
 
   * Upgrade to TeamCity 9.0.5
