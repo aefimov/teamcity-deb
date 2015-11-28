@@ -70,23 +70,7 @@ git commit -m "Add artifacts of SSL keys creation"
 git push origin master
 ```
 
-### Step 3. Create SSH keys for `teamcity` user
-TeamCity Server and Agent run under user `teamcity`. If you want to use SSH
-authorization to access Version Control servers you need to generate SSH keys
-(private and public) for the user.
-
-```
-ssh-keygen -t rsa -N "" -C teamcity -f ssh-keys/id_rsa
-```
-When it prompts for overwriting existing keys, you should agree.
-Don't forget to commit these new keys:
-```
-git add ssh-keys/id_rsa*
-git commit -m "Update SSH keys"
-git push origin master
-```
-
-### Step 4. Build package
+### Step 3. Build package
 In Git repo root and on Ubuntu/Debian host:
 Update version (do not modify the first part of the version, it isused for downloading
 TeamCity distribution from JetBrains site):

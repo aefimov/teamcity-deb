@@ -37,8 +37,5 @@ install -d $A/var/lib/teamcity/BuildAgents
 inst $C -m644 home/teamcity/.gitconfig
 inst $C -m644 home/teamcity/.teamcityrc
 inst $C -m644 home/teamcity/.ssh/config
-# SSH keys
-install -m600 ssh-keys/id_rsa $C/home/teamcity/.ssh/id_rsa
-install -m600 ssh-keys/id_rsa.pub $C/home/teamcity/.ssh/id_rsa.pub
 # Nginx cache
 mkdir -p $S/var/lib/teamcity/nginx-cache
