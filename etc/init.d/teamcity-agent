@@ -24,7 +24,7 @@ d_start() {
 }
 
 d_stop() {
-    su - teamcity -c "(. ~/.teamcityrc; cd $AGENTS_ROOT/$1; $AGENTS_ROOT/$1/bin/agent.sh stop $2)"
+    su - teamcity -c "(. ~/.teamcityrc; cd $AGENTS_ROOT/$1; $AGENTS_ROOT/$1/bin/agent.sh stop kill)"
 }
 
 d_install() {
@@ -60,7 +60,7 @@ d_install() {
         echo "Agent installed to $AGENTS_ROOT/$NAME with follow options:"
         cat $AGENTS_ROOT/$NAME/conf/buildAgent.properties | egrep -v "^#" | egrep -v "^[[:space:]]*$"
         echo "To start/stop/restart agent use:"
-        echo "sudo /etc/init.d/teamcity-agent (start|stop|kill|restart) $NAME"
+        echo "sudo /etc/init.d/teamcity-agent (start|stop|restart) $NAME"
     fi
 }
 
@@ -78,13 +78,9 @@ case "$1" in
         echo "Stopping TeamCity Agent '$teamcity_agent_name'..."
         d_stop $teamcity_agent_name
         ;;
-    kill)
-        echo "Killing TeamCity Agent '$teamcity_agent_name'..."
-        d_stop $teamcity_agent_name 'kill'
-        ;;
     restart|force-reload)
         echo "Restarting TeamCity Agent '$teamcity_agent_name'..."
-        d_stop $teamcity_agent_name 'kill'
+        d_stop $teamcity_agent_name
         sleep 1
         d_start $teamcity_agent_name
         ;;
@@ -97,7 +93,7 @@ case "$1" in
         d_install $1 $2
         ;;
     *)
-        echo "Usage: /etc/init.d/teamcity-agent {start|stop|kill|restart|install} [<teamcity-agent-name>] [<teamcity.server.url>]" >&2
+        echo "Usage: /etc/init.d/teamcity-agent {start|stop|restart|install} [<teamcity-agent-name>] [<teamcity.server.url>]" >&2
         exit 1
         ;;
 esac

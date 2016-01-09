@@ -155,20 +155,18 @@ sudo /etc/init.d/teamcity-agent
 
 Start:
 ```
-sudo /etc/init.d/teamcity-agent start <agent-name>
+sudo /etc/init.d/teamcity-agent start [<agent-name>]
 ```
-Stop (gently):
+Stop:
 ```
-sudo /etc/init.d/teamcity-agent stop <agent-name>
-```
-Stop (killing):
-```
-sudo /etc/init.d/teamcity-agent kill <agent-name>
+sudo /etc/init.d/teamcity-agent stop [<agent-name>]
 ```
 Restart:
 ```
-sudo /etc/init.d/teamcity-agent restart <agent-name>
+sudo /etc/init.d/teamcity-agent restart [<agent-name>]
 ```
+
+Default <agent-name> is buildAgent
 
 ### Upgrade TeamCity Server. Bad practice
 ```
