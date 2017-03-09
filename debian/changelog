@@ -1,3 +1,9 @@
+teamcity (10.0.5.0) unstable; urgency=medium
+
+  * Upgrade to TeamCity 10.0.5
+
+ -- Alexey Efimov <aefimov-box@ya.ru>  Thu, 09 Mar 2017 16:28:01 +0000
+
 teamcity (10.0.4.0) unstable; urgency=medium
 
   * Upgrade to TeamCity 10.0.4
