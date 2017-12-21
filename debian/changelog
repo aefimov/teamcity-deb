@@ -1,3 +1,9 @@
+teamcity (2017.2.1.0) unstable; urgency=medium
+
+  * Upgrade to TeamCity 2017.2.1
+
+ -- Alexey Efimov <aefimov-box@ya.ru>  Thu, 21 Dec 2017 06:10:13 +0000
+
 teamcity (2017.1.5.0) unstable; urgency=medium
 
   * Upgrade to TeamCity 2017.1.5
