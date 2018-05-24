@@ -10,7 +10,7 @@ case $1 in
 
         if [ -z "$(id $U 2>/dev/null)" ]; then
             echo Creating user $U...
-            adduser --home /home/$U --shell /bin/sh $U
+            useradd --home /home/$U --shell /bin/sh $U
         fi
 
         chmod 700 /home/$U/.ssh
