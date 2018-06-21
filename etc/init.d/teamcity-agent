@@ -18,6 +18,11 @@ set -e
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 AGENTS_ROOT="/usr/local/teamcity-agents"
 DATA_ROOT="/var/lib/teamcity/BuildAgents"
+DEFAULT_TEAMCITY_AGENT="buildAgent"
+DEFAULT_TEAMCITY_SERVER=""
+DEFAULT_AGENT_USER="teamcity"
+
+[ -r /etc/default/teamcity-agent ] && . /etc/default/teamcity-agent
 
 detect_user() {
     # Get agent's work dir owner
@@ -33,11 +38,11 @@ d_stop() {
 }
 
 d_install() {
-    NAME=$1
-    SERVER_URL=$2
-    AGENT_USER=${3:-"teamcity"}
+    NAME="$1"
+    SERVER_URL="${2:-$DEFAULT_TEAMCITY_SERVER}"
+    AGENT_USER="${3:-$DEFAULT_AGENT_USER}"
     if [ -z "$NAME" -o -z "$SERVER_URL" ]; then
-        echo "Usage /etc/init.d/teamcity-agent install <teamcity-agent-name> <teamcity.server.url> [<user>]"
+        echo "Usage /etc/init.d/teamcity-agent install <teamcity-agent-name> [<teamcity.server.url>] [<user>]"
         exit 1;
     else
         echo Downloading TeamCity Agent from $SERVER_URL...
@@ -70,10 +75,7 @@ d_install() {
     fi
 }
 
-teamcity_agent_name="$2"
-if [ -z "$teamcity_agent_name" ]; then
-    teamcity_agent_name="buildAgent"
-fi
+teamcity_agent_name="${2:-$DEFAULT_TEAMCITY_AGENT}"
 
 case "$1" in
     start)
@@ -94,9 +96,8 @@ case "$1" in
         find $AGENTS_ROOT -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | sort
         ;;
     install)
-        shift
-        echo "Installing new agent $1 connected to $2"
-        d_install $1 $2 $3
+        echo "Installing new agent $teamcity_agent_name connected to $3"
+        d_install $teamcity_agent_name $3 $4
         ;;
     *)
         echo "Usage: /etc/init.d/teamcity-agent {start|stop|restart|install} [<teamcity-agent-name>] [<teamcity.server.url>] [<user>]" >&2
