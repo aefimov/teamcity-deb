@@ -19,19 +19,25 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 AGENTS_ROOT="/usr/local/teamcity-agents"
 DATA_ROOT="/var/lib/teamcity/BuildAgents"
 
+detect_user() {
+    # Get agent's work dir owner
+    stat -c '%U' "$AGENTS_ROOT/$1"
+}
+
 d_start() {
-    su - teamcity -c "(. ~/.teamcityrc; cd $AGENTS_ROOT/$1; $AGENTS_ROOT/$1/bin/agent.sh start)"
+    su - $(detect_user $1) -c "(. ~/.teamcityrc; cd $AGENTS_ROOT/$1; $AGENTS_ROOT/$1/bin/agent.sh start)"
 }
 
 d_stop() {
-    su - teamcity -c "(. ~/.teamcityrc; cd $AGENTS_ROOT/$1; $AGENTS_ROOT/$1/bin/agent.sh stop kill)"
+    su - $(detect_user $1) -c "(. ~/.teamcityrc; cd $AGENTS_ROOT/$1; $AGENTS_ROOT/$1/bin/agent.sh stop kill)"
 }
 
 d_install() {
     NAME=$1
     SERVER_URL=$2
+    AGENT_USER=${3:-"teamcity"}
     if [ -z "$NAME" -o -z "$SERVER_URL" ]; then
-        echo "Usage /etc/init.d/teamcity-agent install <teamcity-agent-name> <teamcity.server.url>"
+        echo "Usage /etc/init.d/teamcity-agent install <teamcity-agent-name> <teamcity.server.url> [<user>]"
         exit 1;
     else
         echo Downloading TeamCity Agent from $SERVER_URL...
@@ -56,7 +62,7 @@ d_install() {
             | sed "s,^systemDir=.*$,systemDir=$SYSTEM_DIR,g" \
             | sed "s,^ownPort=.*$,ownPort=$OWN_PORT,g" \
         > $AGENTS_ROOT/$NAME/conf/buildAgent.properties
-        chown -R teamcity $AGENTS_ROOT/$NAME
+        chown -R $AGENT_USER $AGENTS_ROOT/$NAME
         echo "Agent installed to $AGENTS_ROOT/$NAME with follow options:"
         cat $AGENTS_ROOT/$NAME/conf/buildAgent.properties | egrep -v "^#" | egrep -v "^[[:space:]]*$"
         echo "To start/stop/restart agent use:"
@@ -90,10 +96,10 @@ case "$1" in
     install)
         shift
         echo "Installing new agent $1 connected to $2"
-        d_install $1 $2
+        d_install $1 $2 $3
         ;;
     *)
-        echo "Usage: /etc/init.d/teamcity-agent {start|stop|restart|install} [<teamcity-agent-name>] [<teamcity.server.url>]" >&2
+        echo "Usage: /etc/init.d/teamcity-agent {start|stop|restart|install} [<teamcity-agent-name>] [<teamcity.server.url>] [<user>]" >&2
         exit 1
         ;;
 esac
