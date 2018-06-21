@@ -37,6 +37,10 @@ d_stop() {
     su - $(detect_user $1) -c "(. ~/.teamcityrc; cd $AGENTS_ROOT/$1; $AGENTS_ROOT/$1/bin/agent.sh stop kill)"
 }
 
+d_status() {
+    su - $(detect_user $1) -c "(. ~/.teamcityrc; cd $AGENTS_ROOT/$1; $AGENTS_ROOT/$1/bin/agent.sh status short)"
+}
+
 d_install() {
     NAME="$1"
     SERVER_URL="${2:-$DEFAULT_TEAMCITY_SERVER}"
@@ -92,6 +96,9 @@ case "$1" in
         sleep 1
         d_start $teamcity_agent_name
         ;;
+    status)
+        d_status $teamcity_agent_name
+        ;;
     list)
         find $AGENTS_ROOT -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | sort
         ;;
@@ -100,7 +107,7 @@ case "$1" in
         d_install $teamcity_agent_name $3 $4
         ;;
     *)
-        echo "Usage: /etc/init.d/teamcity-agent {start|stop|restart|install} [<teamcity-agent-name>] [<teamcity.server.url>] [<user>]" >&2
+        echo "Usage: /etc/init.d/teamcity-agent {start|stop|restart|status|install} [<teamcity-agent-name>] [<teamcity.server.url>] [<user>]" >&2
         exit 1
         ;;
 esac
