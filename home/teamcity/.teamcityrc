@@ -12,3 +12,5 @@ export TEAMCITY_SERVER_OPTS="$TEAMCITY_OPTS -Dorg.apache.tomcat.util.buf.UDecode
 
 export TEAMCITY_AGENT_MEM_OPTS="-Xms128m -Xmx1024m"
 export TEAMCITY_AGENT_OPTS="$TEAMCITY_OPTS"
+
+export TEAMCITY_LAUNCHER_OPTS="-Xms16m -Xmx64m"
