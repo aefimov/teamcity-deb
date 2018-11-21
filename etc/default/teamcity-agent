@@ -1,0 +1,5 @@
+# AGENTS_ROOT="/usr/local/teamcity-agents"
+# DATA_ROOT="/var/lib/teamcity/BuildAgents"
+# DEFAULT_TEAMCITY_AGENT="buildAgent"
+# DEFAULT_TEAMCITY_SERVER="http://teamcity.fqdn"
+# DEFAULT_AGENT_USER="teamcity"
