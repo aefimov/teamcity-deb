@@ -1,3 +1,9 @@
+teamcity (2019.1.1.0) unstable; urgency=medium
+
+  * Upgrade to TeamCity 2019.1.1
+
+ -- Alexander Sherbakov <alex@codeart.us>  Tue, 30 Jul 2019 13:21:41 +0300
+
 teamcity (2018.2.4.0) unstable; urgency=medium
 
   * Upgrade to TeamCity 2018.2.4
