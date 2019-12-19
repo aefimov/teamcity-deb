@@ -1,3 +1,39 @@
+teamcity (2019.2.0) unstable; urgency=medium
+
+  * Upgrade to TeamCity 2019.2.0
+
+ -- Alexander Sherbakov <alex@codeart.us>  Thu, 19 Dec 2019 18:20:20 +0300
+
+teamcity (2019.1.5.0) unstable; urgency=medium
+
+  * Upgrade to TeamCity 2019.1.5
+
+ -- Alexander Sherbakov <alex@codeart.us>  Thu, 19 Dec 2019 17:56:28 +0300
+
+teamcity (2019.1.2.0) unstable; urgency=medium
+
+  * Upgrade to TeamCity 2019.1.2
+
+ -- Alexander Sherbakov <alex@codeart.us>  Wed, 14 Aug 2019 13:04:01 +0300
+
+teamcity (2019.1.1.0) unstable; urgency=medium
+
+  * Upgrade to TeamCity 2019.1.1
+
+ -- Alexander Sherbakov <alex@codeart.us>  Tue, 30 Jul 2019 13:21:41 +0300
+
+teamcity (2018.2.4.0) unstable; urgency=medium
+
+  * Upgrade to TeamCity 2018.2.4
+
+ -- Alexander Sherbakov <alex@codeart.us>  Tue, 30 Jul 2019 13:07:05 +0300
+
+teamcity (2018.1.5.0) unstable; urgency=medium
+
+  * Upgrade to TeamCity 2018.1.5
+
+ -- Alexander Sherbakov <alex@codeart.us>  Tue, 30 Jul 2019 12:56:12 +0300
+
 teamcity (2018.1.2.0) unstable; urgency=medium
 
   * Upgrade to TeamCity 2018.1.2
